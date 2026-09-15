@@ -3,6 +3,8 @@ const cloudinary = require('../config/cloudinary');
 const db = require('../database/db');
 const crypto = require('crypto');
 const fs  = require('fs');
+const {Readable} = require("stream");
+
 const uploadController = async(req,res,next)=>{
    
 
@@ -17,7 +19,7 @@ const uploadController = async(req,res,next)=>{
         }
         console.log(req.file);
        console.log(req.file.path);
-       const readStream = fs.createReadStream(req.file.buffer)
+       const readStream=Readable.from(req.file.buffer)
        
         
 
@@ -28,8 +30,7 @@ const uploadController = async(req,res,next)=>{
             try{
                 if(error){
                     console.log('cloudinary error',error);
-                    fs.unlink(req.file.buffer,()=>{});
-                    return next(error)
+                  
                     
                 }
                 else{
@@ -38,15 +39,7 @@ const uploadController = async(req,res,next)=>{
                        const{originalname} = req.file;
                        console.log(originalname);
                       const response = await db.query(`insert into  file(user_id,original_name,file_url,share_code,public_id,resource_type,format) Values($1,$2,$3,$4,$5,$6,$7) returning *`,[user_id,originalname,url,share_code,public_id,resource_type,format]);
-                      fs.unlink(req.file.path,(unlinkError)=>{
-                        if(unlinkError){
-                            console.log('temporery file deletion error');    
-                        }
-                        else{
-                            console.log("temporery file deleted");
-                            
-                        }
-                      });
+                
 
                  if(response.rows.length === 0){
                 return res.status(404).json({
@@ -54,6 +47,7 @@ const uploadController = async(req,res,next)=>{
              })
             }
            
+          console.log("databse result");
                
     console.log(response.rows[0]);
 
@@ -87,8 +81,7 @@ readStream.on('end',()=>{
       uploadStream.destroy(error);
 
       // Delete temporary file
-      fs.unlink(req.file.path, () => {});
-
+     
       next(error);
     });
 
