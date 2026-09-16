@@ -1,7 +1,6 @@
 
 const cloudinary = require('../config/cloudinary');
 const db = require('../database/db');
-const crypto = require('crypto');
 const {Readable} = require("stream");
 
 const uploadController = async(req,res,next)=>{
@@ -9,7 +8,7 @@ const uploadController = async(req,res,next)=>{
 
     try{
      const user_id = req.userId;
-     const share_code = crypto.randomBytes(6).toString('hex').toUpperCase();
+     const share_code = Math.floor(1000 + Math.random() * 9000);
 
         if(!req.file){
             return res.status(404).json({
