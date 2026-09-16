@@ -8,10 +8,12 @@ const getUpload = require('./routes/getUpload.routes');
 const downloadRouter = require('./routes/download.routes');
 const getprofileRouter = require('./routes/getProfile.routes');
 const editProfileRouter = require('./routes/editProfile.routes');
+const dotenv = require('dotenv');
+dotenv.config();
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT;
 
-app.use(cors());
+app.use(cors({origin:'http://localhost:5173'}));
 app.use(express.json());
 
 app.use(userRouter);

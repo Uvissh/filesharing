@@ -2,7 +2,6 @@
 const cloudinary = require('../config/cloudinary');
 const db = require('../database/db');
 const crypto = require('crypto');
-const fs  = require('fs');
 const {Readable} = require("stream");
 
 const uploadController = async(req,res,next)=>{
