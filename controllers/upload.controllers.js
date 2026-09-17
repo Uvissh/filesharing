@@ -2,6 +2,7 @@
 const cloudinary = require('../config/cloudinary');
 const db = require('../database/db');
 const {Readable} = require("stream");
+const path = require("path");
 
 const uploadController = async(req,res,next)=>{
    
@@ -45,10 +46,11 @@ else {
                 }
                 else{
                     console.log('clodinary result',result);
-                     const {  url, public_id, resource_type,  format} = result;
+                     const {  secure_url, public_id, resource_type} = result;
                        const{originalname} = req.file;
+                       const format = path.extname(originalname).slice(1);
                        console.log(originalname);
-                      const response = await db.query(`insert into  file(user_id,original_name,file_url,share_code,public_id,resource_type,format) Values($1,$2,$3,$4,$5,$6,$7) returning *`,[user_id,originalname,url,share_code,public_id,resource_type,format]);
+                      const response = await db.query(`insert into  file(user_id,original_name,file_url,share_code,public_id,resource_type,format) Values($1,$2,$3,$4,$5,$6,$7) returning *`,[user_id,originalname,secure_url,share_code,public_id,resource_type,format]);
                 
 
                  if(response.rows.length === 0){
