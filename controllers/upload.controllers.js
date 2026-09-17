@@ -29,15 +29,22 @@ else if (req.file.mimetype.startsWith("video/")) {
     resourceType = "video";
 } 
 else {
-    resourceType = "raw",
-     public_id= `${Date.now()}_${path.parse(req.file.originalname).name}.pdf`
+    resourceType = "raw";
+   
+}
+const uploadOptions = {
+    resource_type: resourceType
+};
+
+if (resourceType === "raw") {
+    uploadOptions.public_id =
+        `${Date.now()}_${path.parse(req.file.originalname).name}.pdf`;
 }
        
         
 
-        const uploadStream =  cloudinary.uploader.upload_stream({
-            resource_type: resourceType
-        },
+        const uploadStream =  cloudinary.uploader.upload_stream(
+            uploadOptions,
         async(error,result)=>{
             try{
                 if(error){
