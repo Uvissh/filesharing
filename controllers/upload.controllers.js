@@ -18,11 +18,23 @@ const uploadController = async(req,res,next)=>{
         console.log(req.file);
        console.log(req.file.path);
        const readStream=Readable.from(req.file.buffer)
+
+       let resourceType;
+
+  if (req.file.mimetype.startsWith("image/")) {
+    resourceType = "image";
+} 
+else if (req.file.mimetype.startsWith("video/")) {
+    resourceType = "video";
+} 
+else {
+    resourceType = "raw";
+}
        
         
 
         const uploadStream =  cloudinary.uploader.upload_stream({
-            resource_type: "auto"
+            resource_type: resourceType
         },
         async(error,result)=>{
             try{
