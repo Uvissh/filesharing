@@ -29,7 +29,8 @@ else if (req.file.mimetype.startsWith("video/")) {
     resourceType = "video";
 } 
 else {
-    resourceType = "raw";
+    resourceType = "raw",
+     public_id= `${Date.now()}_${path.parse(req.file.originalname).name}.pdf`
 }
        
         
